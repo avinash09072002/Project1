@@ -1,0 +1,43 @@
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+};
+
+var glblSellLoginErr = getUrlParameter('sellLoginErr');
+var glblSellErrorMsg = '';
+if(glblSellLoginErr == '1'){
+	glblSellErrorMsg = 'Please Enter Phone Number!';
+}else if(glblSellLoginErr == '2'){
+	glblSellErrorMsg = 'Please Enter 10 Digit Number!';
+}else if(glblSellLoginErr == '3'){
+	glblSellErrorMsg = 'Please Valid Phone Number!';
+}else if(glblSellLoginErr == '4'){
+	glblSellErrorMsg = 'Please Enter Valid Otp!';
+}else if(glblSellLoginErr == '5'){
+	glblSellErrorMsg = 'Invalid Details';
+}else if(glblSellLoginErr == '6'){
+	glblSellErrorMsg = 'Please Enter Valid Password!';
+}
+
+jQuery(document).ready(function($){
+	if(typeof(glblSellLoginErr) != 'undefined' && glblSellLoginErr != '' ){
+		$(".sellerError").removeClass('hidden');
+		$("#sellerLoginError").html(glblSellErrorMsg);
+		$refinedUrl = removeURLParameter(window.location.href, 'sellLoginErr');
+		history.pushState('', "", $refinedUrl);
+		if(window.location.href.indexOf('agribegri_seller_login.php') == -1){
+			var inst = $('[data-remodal-id=modal-sell]').remodal();
+			inst.open();		
+		}
+	}
+});

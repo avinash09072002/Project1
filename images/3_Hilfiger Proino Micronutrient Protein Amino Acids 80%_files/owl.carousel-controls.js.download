@@ -1,0 +1,244 @@
+$(document).ready(function(){
+	$('.main-slider').owlCarousel({
+		loop: true,
+		margin: 10,
+		nav: true,
+		navText: ["<i class='mdi mdi-chevron-left'></i>", "<i class='mdi mdi-chevron-right'></i>"],
+		dots: true,
+		autoplay: true,
+		autoplayTimeout: 4000,
+		autoplayHoverPause: true,
+		smartSpeed: 600,
+		responsiveClass: true,
+		responsive:{
+			0:{
+				items: 1,
+				margin: 0,
+				nav: false,
+			},
+			600:{
+				items: 1,
+				margin: 0,
+			},
+			1000:{
+				items: 3,
+			},
+			1100:{
+				items: 3,
+			},
+			1367:{
+				items: 3,
+			}
+		}
+	})
+	var loopCarousel = recentViewItemcount > 5 ? true : false;
+	//alert(recentViewItemcount);
+	$('.recently_view').owlCarousel({
+		loop: loopCarousel,
+		margin: 20,
+		nav: true,
+		navText: ["<img alt='Previous' src='images/owl-prev.png'>", "<img alt='Next' src='images/owl-next.png'>"],
+		dots: false,
+		responsiveClass: true,
+		onInitialized: function(){
+			resizeProducts(".recently_view .product_details_wrap");
+			resizeProducts(".recently_view .product_details_wrap .product_name_review_details");
+		},
+		responsive:{
+			0:{
+				items: 1,
+				margin: 0,
+			},
+			600:{
+				items: 2,
+			},
+			1000:{
+				items: 4,
+			},
+			1100:{
+				items: 5,
+			},
+			1367:{
+				items: 5,
+			},
+			1440:{
+				items: 5,
+			},
+			1500:{
+				items: 6,
+			}
+		}
+	})
+	var loopCarousel_col7 = recommendedProd == 1 ? false : true;
+	var items_total_seven = recommendedProd == 1 ? 4 : 7;
+	var items_total_five = recommendedProd == 1 ? 4 : 5;
+	var image_path = imageUrl;
+	
+	$('.listing-col7').owlCarousel({
+		loop: loopCarousel_col7,
+		margin: 20,
+		nav: true,
+		navText: ["<img alt='Previous' src='"+image_path+"images/owl-prev.png'>", "<img alt='Next' src='"+image_path+"images/owl-next.png'>"],
+		dots: false,
+		responsiveClass: true,
+		responsiveClass: true,
+		onInitialized: function(event){
+			var wrapclass = 'today_offer';
+			
+			if( ($.inArray( 'best_selling', event.currentTarget.classList ) === -1) && ($.inArray( 'recom_prod', event.currentTarget.classList ) === -1) ){
+				wrapclass = 'today_offer';
+			}else if( ($.inArray( 'today_offer', event.currentTarget.classList ) === -1) && ($.inArray( 'recom_prod', event.currentTarget.classList ) === -1)){
+				wrapclass = 'best_selling';
+			}else{
+				this.settings.loop = false;
+				wrapclass = 'recom_prod';
+			}
+
+			//alert(wrapclass);
+			resizeProducts("."+wrapclass+" .product_details_wrap");
+			resizeProducts("."+wrapclass+" .product_details_wrap .product_name_review_details");
+		},
+		responsive:{
+			0:{
+				items: 1,
+				margin: 0,
+			},
+			600:{
+				items: 2,
+			},
+			1000:{
+				items: 4,
+			},
+			1100:{
+				items: items_total_five,
+			},
+			1367:{
+				items: items_total_five,
+			},
+			1440:{
+				items: items_total_five,
+			},
+			1500:{
+				items: items_total_seven,
+			}
+		}
+	})
+	$('.listing-col3').owlCarousel({
+		loop: true,
+		margin: 40,
+		nav: false,
+		navText: ["<img alt='Previous' src='images/owl-prev.png'>", "<img alt='Next' src='images/owl-next.png'>"],
+		dots: true,
+		autoplay: true,
+		autoplayTimeout: 4000,
+		responsiveClass: true,
+		responsive:{
+			0:{
+				items: 1,
+				margin: 0,
+			},
+			600:{
+				items: 2,
+				margin: 10,
+			},
+			1000:{
+				items: 2,
+			},
+			1100:{
+				items: 2,
+			},
+			1367:{
+				items: 3,
+			}
+		}
+	})
+	$('.testimonial-slider').owlCarousel({
+		items: 1,
+		loop: true,
+		margin: 0,
+		nav: false,
+		navText: ["<i class='mdi mdi-chevron-left'></i>", "<i class='mdi mdi-chevron-right'></i>"],
+		dots: true,
+		autoplay: true,
+		autoplayTimeout: 4000,
+		autoplayHoverPause: true,
+		smartSpeed: 600
+	})
+	
+	
+	$('.products-listing').owlCarousel({
+		loop: true,
+		margin: 0,
+		nav: true,
+		navText: ["<img alt='Previous' src='images/owl-prev.png'>", "<img alt='Next' src='images/owl-next.png'>"],
+		dots: false,
+		dotsEach: false,
+		smartSpeed: 700,
+		mouseDrag: false,
+		autoplay: true,
+		responsiveClass: true,
+		responsive: {
+			0: {
+				items: 2,
+				nav: true,
+				dots: false,
+			},
+			600: {
+				items: 3,
+				dots: false,
+				nav: true,
+				navText: ["", ""],
+			},
+			1000: {
+				items: 3,
+				dots: false,
+			},
+			1100:{
+				items: 4,
+				dots: false,
+			}
+			,
+			1600:{
+				items: 8,
+				dots: false,
+			}
+		}
+	})
+	
+});
+
+
+function resizeProducts(selector_elem, increase_width = false){
+
+  var maxHeight = 0;
+
+  var $ = jQuery;
+
+  $(selector_elem).each(function(){
+
+  
+
+  if(maxHeight < $(this).height()){
+
+    //alert($(this).height());
+
+    /*console.log(selector_elem+$(this).height());*/
+
+    maxHeight = $(this).height();
+
+  }
+
+  });
+
+  //alert(maxHeight);
+  //console.log(maxHeight);
+  if(increase_width && ($( window ).width() <= 600)){
+    maxHeight = maxHeight+10; 
+    /*if(selector_elem =='.new_arrival_div'){*/
+    //alert(maxHeight);
+    /*}*/
+    //console.log('added 10px');
+  }
+  $(selector_elem).css('height', maxHeight);
+
+}

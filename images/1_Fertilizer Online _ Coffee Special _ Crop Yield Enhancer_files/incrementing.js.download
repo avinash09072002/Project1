@@ -1,0 +1,51 @@
+$(function() {
+
+  //$(".numbers-row").append('<div class="inc button">+</div><div class="dec button">-</div>');
+
+  //$(".button").on("click", function() {
+  $("body").on('click','.button', function(e){
+
+  	var $button = $(this);
+    var oldValue = $(".numbers-row").find("input").val();
+    //var oldValue = $("#french-hens").val();
+    var product_id = $('#p_id').val();
+	var site_url = $('#site_url').val();
+	var abpdv_id = $("#abpdv_id").val();
+	var newVal = 0;
+
+	if ($button.text() == "+") {
+  	  newVal = parseInt(oldValue) + 1;
+  	  
+  	} else {
+	   // Don't allow decrementing below zero
+      if (oldValue > 0) {
+        newVal = parseInt(oldValue) - 1;
+	  } else {
+        newVal = 0;
+      }
+   }
+    if(newVal <= 0)
+	{
+		jAlert('Qty must be greater then 0!', 'Alert Dialog');
+		$("#french-hens").val(oldValue);	
+		return false;
+	}else{
+		var xhr = $.ajax({
+		url:''+site_url+'check_stock_qty.php',
+		type:'post',
+		dataType:'json',
+		data:{oldValue:newVal,product_id:product_id,abpdv_id:abpdv_id},
+		success:function(data){
+				if(data.msg == 'Available')
+				{
+					$('#french-hens').val(newVal);
+				}else{
+					jAlert(data.msg, 'Alert Dialog');
+					$("#french-hens").val(oldValue);	
+				}
+			}
+		});
+		//xhr.abort();	
+	}
+  });
+});

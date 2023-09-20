@@ -1,0 +1,164 @@
+function validatePhone(phoneNumber){
+   var phoneNumberPattern = /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/;  
+   return phoneNumberPattern.test(phoneNumber); 
+}
+
+
+var valcounter = 60;
+var xhr = "";
+function CheckusersendOTP(userphone, usertype, strflag, action, frmtype=""){
+	if(xhr && xhr.readystate != 4){
+		xhr.abort();
+	}
+	
+	xhr = jQuery.ajax({
+		url:'https://agribegri.com/general_login_check.php',
+		type:'POST',
+		dataType: 'json',
+		data:{userphone:userphone,type:usertype,strflag:strflag,action:action},
+		success:function(data){					
+			if(data.response_code=="0"){
+				jAlert(data.response_error);
+				return false;
+			}else if(data.response_code=="1"){
+				//jAlert(data.response_data);
+				jQuery("#spLoginresendmessage").hide();
+				jQuery("#spLoginwaitmessage").hide();
+				jQuery("#spLoginmessage").show();
+				if(frmtype=='userpopup'){
+					jQuery("#lblPopupOTP").show();
+				}else if(frmtype=='usercheckout'){
+					jQuery("#lblCheckoutOTP").show();
+				}else if(frmtype=='userloginpopup'){
+					jQuery("#lblloginOTP").show();
+				}else{
+					jQuery("#lblOTP").show();
+				}
+				jQuery("#hidIsOtpSent").val('1');
+				jQuery("#spLoginmessage").html(data.response_data + " If you didn't receive SMS then wait <span id='divmsgCounter' style='color: #000000 !important;'>"+ valcounter +"</span> seconds.");
+				sessionStorage.clear();
+				sessionStorage.setItem("countersms", 0);
+				sessionStorage.removeItem("countersms");
+				var cntvalue = valcounter;
+				SessionFunction(strflag,action,frmtype);
+				
+				return false;
+			}
+		}
+	});
+	
+}
+
+function VerifyOTP(userphone, usertype, strotp, action, frmtype=""){
+	jQuery.ajax({
+		url:'https://agribegri.com/general_login_check.php',
+		type:'POST',
+		dataType: 'json',
+		data:{userphone:userphone,type:usertype,strotp:strotp,action:action},
+		success:function(data){					
+			if(data.response_code=="0"){
+				jAlert(data.response_error);
+				return false;
+			}else if(data.response_code=="1"){
+				if(action=='userlogin' && frmtype==""){
+					window.location.href='https://agribegri.com/index.php';
+				}else if(action=='userlogin' && frmtype=='usercheckout'){
+					window.location.href='check_out.php?l=y';
+				}else if(action=='userlogin' && frmtype=='userloginpopup'){
+					window.location.href='https://agribegri.com/index.php';
+				}else if(action=='userlogin' && frmtype!=""){
+					window.location.href='https://agribegri.com/'+frmtype;
+				}else if(action=='userregitser' && frmtype==""){
+					jQuery("#user_reg_hide_otp").prop('disabled', false);
+					jQuery('#frm_submit').click();	
+				}else if(action=='userregitser' && frmtype=='userpopup'){
+					jQuery('#frm_submit_user_reg').click();	
+				}
+				return false;
+			}
+		}
+	});	
+}
+
+function VerifyCookieUser(userphone, usertype, action, frmtype=""){
+	jQuery.ajax({
+		url:'https://agribegri.com/general_login_check.php',
+		type:'POST',
+		dataType: 'json',
+		data:{userphone:userphone,type:usertype,action:action},
+		success:function(data){					
+			if(data.response_code=="0"){
+				jAlert(data.response_error);
+				return false;
+			}else if(data.response_code=="1"){
+				if(action=='cookieuserlogin' && frmtype==""){
+					window.location.href='https://agribegri.com/index.php';
+				}else if(action=='cookieuserlogin' && frmtype=='usercheckout'){
+					window.location.href='check_out.php?l=y';
+				}else if(action=='cookieuserlogin' && frmtype=='userloginpopup'){
+					window.location.href='https://agribegri.com/index.php';
+				}else if(action=='cookieuserlogin' && frmtype!=""){
+					window.location.href='https://agribegri.com/'+frmtype;
+				}else if(action=='userregitser' && frmtype==""){
+					jQuery("#user_reg_hide_otp").prop('disabled', false);
+					jQuery('#frm_submit').click();	
+				}else if(action=='userregitser' && frmtype=='userpopup'){
+					jQuery('#frm_submit_user_reg').click();	
+				}
+				return false;
+			}
+		}
+	});	
+}
+
+function SessionFunction(strflag,action,frmtype){
+	if (sessionStorage.getItem("countersms")) {
+		if (sessionStorage.getItem("countersms") <= 0) {
+			var cntvalue = 0;
+			sessionStorage.clear();
+		} else {
+			var cntvalue = sessionStorage.getItem("countersms");
+			document.getElementById('divmsgCounter').innerHTML = cntvalue;
+		}
+	} else {
+		var cntvalue = valcounter;
+		document.getElementById('divmsgCounter').innerHTML = cntvalue;
+	}
+	console.log("TES : " + cntvalue + "==>" + strflag);
+	var countersms = function () {
+		if (cntvalue <= 0) {
+			sessionStorage.setItem("countersms", 0);
+			cntvalue = 0;
+			jQuery("#spLoginmessage").hide();
+			clearInterval(interval);
+			if(strflag=="regular"){
+				jQuery("#spLoginwaitmessage").show();
+				strcall = "loginvalidate(\"resend\");";
+				if(frmtype=='userpopup'){
+					strcall = "validate_user_reg(\"resend\");";	
+				}else if(frmtype=='usercheckout'){
+					strcall = "validate_login(\"resend\");";	
+				}else if(frmtype=='userloginpopup'){
+					strcall = "validate_user_login(\"resend\");";	
+				}else if(action=='userregistercheck'){
+					strcall = "uservalidate(\"resend\");";	
+				}
+				jQuery("#spLoginwaitmessage").html("If you don't get SMS, please <a href='#' id='btnUserLoginResend' onclick='"+ strcall +"'>click here</a> to get a new password.");
+				jQuery("#spLoginresendmessage").hide();
+			}else{
+				jQuery("#spLoginresendmessage").show();
+				jQuery("#spLoginwaitmessage").hide();
+				jQuery("#spLoginresendmessage").html("If you don't get SMS, Please call us on 74282 08822 or 90997 00095.");
+				sessionStorage.removeItem("countersms");
+			}
+			
+			sessionStorage.clear();
+		} else {
+			cntvalue = parseInt(cntvalue) - 1;
+			sessionStorage.setItem("countersms", cntvalue);
+			
+			document.getElementById('divmsgCounter').innerHTML = cntvalue;
+		}
+	};
+	var interval = setInterval(countersms, 1000);
+}

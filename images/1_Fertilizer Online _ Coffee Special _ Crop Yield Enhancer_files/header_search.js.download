@@ -1,0 +1,103 @@
+jQuery(document).ready(function($){
+
+	/*var xhr = null;
+		jQuery('#search_product').typeahead({
+			minLength: 3, //->juni 08.03.2014 -> limit from js in the first place
+			items:5,
+			source: function (query, process) {
+				//if(xhr) {
+				//	xhr.abort();
+				//	xhr = null;
+				//}
+
+				//console.log("A : " + xhr);
+
+				return xhr = jQuery.ajax({
+					url: 'https://agribegri.com/ajax_typehead_search.php',//juni -> switch files  to be able to search by id
+					type: 'post',
+					data: {query: query},
+					dataType: 'json',
+					success: function (result) {
+            			//console.log(result);
+						jQuery(".dropdown-menu").css("display", "none");
+						var resultList = result.map(function (item) {
+							if(item.abpd_id != null || item.abpd_id != ''){
+								//var aItem = item;
+								var aItem = { href: item.abpd_meta_title, abpd_name: item.abpd_name ,abpd_price: item.abpd_price,abpd_product_tags: item.abpd_product_tags,abpd_meta_keyword: item.abpd_meta_keyword,abpd_descri: item.abpd_descri}; //,abpd_image:item.abpd_image};
+								return JSON.stringify(aItem);
+							}
+						});
+						setTimeout(function(){
+								if(resultList.length > 5)
+								{
+									jQuery(".dropdown-menu").append('<li class="show_more"><a onclick="getProduct()">Show More Result</a></li>');
+								}
+
+								jQuery(".dropdown-menu").css("width", "100%");
+              					jQuery(".dropdown-menu").css("display", "block");
+
+							}, 5);
+						return process(resultList);
+					}
+				});
+
+				//console.log("A1 : " + xhr);
+			},
+
+			matcher: function (obj) {
+
+				var item = JSON.parse(obj);
+				
+				return ((item.abpd_product_tags != '' && ~item.abpd_product_tags.toLowerCase().indexOf(this.query.toLowerCase())) || ~item.abpd_name.toLowerCase().indexOf(this.query.toLowerCase()) || (item.abpd_descri != '' && ~item.abpd_descri.toLowerCase().indexOf(this.query.toLowerCase())))
+			},
+
+			sorter: function (items) {
+				
+				var beginswith = [], caseSensitive = [], caseInsensitive = [], item;
+				while (aItem = items.shift()) {
+				var item = JSON.parse(aItem);
+				if (!item.abpd_name.toLowerCase().indexOf(this.query.toLowerCase())) beginswith.push(JSON.stringify(item));
+				else if (~item.abpd_name.indexOf(this.query)) caseSensitive.push(JSON.stringify(item));
+				else caseInsensitive.push(JSON.stringify(item));
+				}
+				return beginswith.concat(caseSensitive, caseInsensitive)
+				
+			},
+
+			highlighter: function (aItem) {
+
+				var item = JSON.parse(aItem);
+
+				//console.log(item);
+
+				var product_url = item.abpd_meta_title+'.php';
+
+				var image = item.abpd_image;
+
+				var price = item.abpd_price;
+
+				var display_img = '';//'<div class="search_type_display_img"><img src="'+image+'" width="20" height="auto"></div>';
+
+
+				var display_ele = '<br><span style="padding: 5px 0;float: left;">'+price+'</span>';
+
+				var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+				var locvalue=item.abpd_name.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+				return '<strong>' + match + '</strong>'
+				})
+
+
+				var dis_p_name = '<div>'+locvalue+display_ele+'</div>';
+
+				var whole_tag = display_img+dis_p_name;
+
+				return whole_tag;
+
+			},
+			updater: function (aItem) {
+
+			var item = JSON.parse(aItem);
+				location.href = item.href;
+			}
+		});*/
+});

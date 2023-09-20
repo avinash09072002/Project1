@@ -1,0 +1,222 @@
+
+//var ww = document.body.clientWidth;
+var ww = document.documentElement.clientWidth;
+
+$(document).ready(function() {
+	$(".nav li span").each(function() {
+		if ($(this).next().length > 0) {
+			$(this).addClass("parent");
+		};
+	})
+	
+	$(".toggleMenu").click(function(e) {
+		e.preventDefault();
+		$(this).toggleClass("active");
+		$(".nav").toggle();
+	});
+	if($("#carouselTicker").length > 0){
+	 $(window).on("load", function() {
+        $("#carouselTicker").carouselTicker();
+    });
+	}
+	 
+	 
+//responsive menu toggle
+	$("#menutoggle").click(function() {
+		$('.xs-menu').toggleClass('displaynone');
+	
+	});
+	//add active class on menu
+	$('.categories-list ul li').click(function(e) {
+		var links = jQuery(this).find('a').attr('href');
+		if(links!='' && links!='#' && links!='javascript:void(0)'){
+		window.location.href = 	links;
+	}else{
+		e.preventDefault();
+		$('li').removeClass('active');
+		$(this).addClass('active');
+	}
+});
+	//drop down menu	
+	$(".drop-down").hover(function() {
+		//$('.mega-menu').addClass('display-on');
+		$(this).find('.mega-menu').addClass('display-on');
+		$(this).find('.mega-menu').css('z-index','10000');
+		$('.shop-cart-dropbx').css('z-index','77');
+		$('.hover-menu-effect-bg').removeClass('hidden');
+	});
+	$(".drop-down").mouseleave(function() {
+		//$('.mega-menu').removeClass('display-on');
+		$(this).find('.mega-menu').removeClass('display-on');
+		$(this).find('.mega-menu').css('z-index','9999');
+		$('.shop-cart-dropbx').css('z-index','999');
+		$('.hover-menu-effect-bg').addClass('hidden');
+	});
+
+	
+	
+	adjustMenu();
+})
+
+$(window).bind('resize orientationchange', function() {
+	ww = document.body.clientWidth;
+	adjustMenu();
+});
+
+var adjustMenu = function() {
+	//if (ww < 1000) {
+	if (ww < 1280) {
+		$(".toggleMenu").css("display", "inline-block");
+		if (!$(".toggleMenu").hasClass("active")) {
+			$(".nav").hide();
+		} else {
+			$(".nav").show();
+		}
+		$(".nav li").unbind('mouseenter mouseleave');
+		$(".nav li span.parent").unbind('click').bind('click', function(e) {
+			// must be attached to anchor element to prevent bubbling
+			e.preventDefault();
+			$(this).parent("li").toggleClass("hover");
+		});
+	} 
+	//else if (ww >= 1000) {
+	else if (ww >= 1280) {	
+		$(".toggleMenu").css("display", "none");
+		$(".nav").show();
+		$(".nav li").removeClass("hover");
+		$(".nav li span").unbind('click');
+		$(".nav li").unbind('mouseenter mouseleave').bind('mouseenter mouseleave', function() {
+		 	// must be attached to li so that mouseleave is not triggered when hover over submenu
+		 	$(this).toggleClass('hover');
+		});
+	}
+}
+
+function emailInvalid(s){
+	if(!(s.match(/^[\w]+([_|\.-][\w]{1,})*@[\w]{2,}([_|\.-][\w]{1,})*\.([a-z]{2,4})$/i) ))
+		{
+		return false;
+	}
+	else{
+		return true;
+	}
+}
+
+function GetSearchBy(byval){
+	jQuery('.search_span').hide();			
+	if(byval!=''){
+		jQuery('#'+byval+'_span').show();
+	}else{
+		jQuery('#product_span').show();
+	}
+}
+
+function getProduct(val){
+	var byval = jQuery('#search_by').val();
+	//window.location.href='products.php?serval='+val+'&byval='+byval;
+	var serval = jQuery('#search_product').val();
+	
+	if(serval!=""){
+		jQuery("#paging_id").val('1');
+		jQuery("#serval").val(serval);
+		jQuery("#sub_serval").val('');
+		jQuery("#byval").val(byval);
+		jQuery("#header_search_frm").trigger("submit");
+	}else{
+		jAlert("Please type atleast 5 characters");
+		return false;
+	}
+}
+
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+	$('#myDropdown').toggle("slow");
+    //document.getElementById("myDropdown").classList.toggle("show");
+}
+
+function myFunctionup() {
+	$('#myDropdownup').toggle("slow");
+    //document.getElementById("myDropdown").classList.toggle("show");
+}
+
+
+jQuery(document).ready(function($){
+	setTimeout(function(){
+		//jQuery('.hasDatepicker').val('');
+		jQuery('.hasDatepicker').prop('readonly', true);
+	},10);
+	
+	jQuery('body').on('keydown','.numers_only',function(e){
+ 		var val = $(this).val();
+		// Allow: backspace, delete, tab, escape, enter and .
+		//alert(e.keyCode+'=>'+val);
+		if (e.keyCode == 110 && val.indexOf('.') !== -1){
+			e.preventDefault();
+			return false;
+		}
+			
+        if (jQuery.inArray(e.keyCode, [46, 8, 9, 27, 13, 109, 189]) !== -1 ||
+             // Allow: Ctrl+A
+            (e.keyCode == 65 && e.ctrlKey === true) || 
+             // Allow: home, end, left, right
+            (e.keyCode >= 35 && e.keyCode <= 39)) {
+                 // let it happen, don't do anything
+                 return;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+            e.preventDefault();
+        }
+	});
+
+	jQuery('body').on('input','.phone_number',function(e){
+ 		
+        this.value = this.value
+	      .replace(/[^\d]/g, '')             // numbers and decimals only
+	      .replace(/(^[\d]{10})[\d]/g, '$1');   // not more than 2 digits at the beginning
+	      
+	});
+
+	jQuery('body').on('input','.decimal_only',function(e){
+ 		this.value = this.value
+	      .replace(/[^\d.-]/g, '')             // numbers and decimals only
+	      .replace(/(^[\d]{})[\d]/g, '$1')   // not more than 2 digits at the beginning
+	      .replace(/(\..*)\./g, '$1')         // decimal can't exist more than once
+	      .replace(/(\.[\d]{2})./g, '$1');	      
+    });
+});
+
+function refineUrl(){
+
+	var url = window.location.href; 
+	value  = url.split("?");   
+	url = value[0];
+	var parts =  value[1].split("&"); 
+	var last = parts[eval(parts.length)-1];
+	//console.log(url); 
+	return url;     
+}
+
+function removeURLParameter(url, parameter) {
+	//prefer to use l.search if you have a location/link object
+	var urlparts= url.split('?'); 
+	if (urlparts.length>=2) {
+
+	var prefix= encodeURIComponent(parameter)+'=';
+	var pars= urlparts[1].split(/[&;]/g);
+
+	//reverse iteration as may be destructive
+	for (var i= pars.length; i-- > 0;) { 
+		//idiom for string.startsWith
+		if (pars[i].lastIndexOf(prefix, 0) !== -1) { 
+			pars.splice(i, 1);
+		}
+	}
+
+	url= urlparts[0] + (pars.length > 0 ? '?' + pars.join('&') : "");
+		return url;
+	} else {
+		return url;
+	}
+}
